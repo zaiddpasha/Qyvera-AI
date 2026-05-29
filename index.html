@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qyvera AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=20260314-introfix1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+</head>
+<body class="preload">
+    <!-- IntelliTalk Intro Splash -->
+    <div id="intro-splash">
+        <div class="intro-center">
+            <div class="intro-brand" aria-label="Qyvera logo animation">
+                <div class="intro-logo-wrap">
+                    <img src="/static/qyvera-logo.svg" class="intro-logo-img" alt="Qyvera logo" />
+                </div>
+                <div class="intro-texts">
+                    <div class="intro-wordmark" aria-label="yvera AI">
+                        <span class="letter" style="--d:0">y</span><span class="letter" style="--d:1">v</span><span class="letter" style="--d:2">e</span><span class="letter" style="--d:3">r</span><span class="letter" style="--d:4">a</span><span class="gap-letter" aria-hidden="true"></span><span class="letter" style="--d:5">A</span><span class="letter" style="--d:6">I</span>
+                    </div>
+                    <div class="intro-tag">Your AI workspace</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="boot-loader" class="boot-loader">
+        <div class="spinner"></div>
+        <div id="page-transition"></div>
+    </div>
+
+    <div id="auth-container" class="auth-page">
+        <div class="auth-box">
+            <h1 class="brand">
+                <img src="/static/qyvera-logo.svg" class="brand-logo" alt="Qyvera logo" />
+                <span>yvera AI</span>
+            </h1>
+            <div class="tabs">
+                <button id="loginTab" class="active">Sign in</button>
+                <button id="registerTab">Create account</button>
+            </div>
+            <div class="auth-content">
+                <p id="auth-desc">Continue with your Google account</p>
+                <button class="google-login" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+                    <span id="auth-btn-text">Continue with Google</span>
+                </button>
+                <p class="terms">
+                    By continuing you agree to Qyvera Terms & Privacy Policy
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-layout" style="display:none;">
+        <img id="topbar-avatar" class="topbar-avatar" src="" alt="profile" />
+
+        <div class="top-left-anchor">
+            <img src="/static/qyvera-logo.svg" class="app-logo" />
+            <span class="top-left-title">Qyvera AI</span>
+
+            <div class="controls-bubble">
+                <button id="sidebar-toggle" class="sidebar-toggle">☰</button>
+                <button id="new-chat-top" class="new-chat-icon">＋</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-spacer"></div>
+            <button class="new-chat-btn" onclick="createSession()">+ New Chat</button>
+            <div class="chat-scroll">
+                <ul id="chat-list"></ul>
+            </div>
+            <div class="sidebar-bottom">
+                <button id="clear-history">
+                    <span>Clear history</span>
+                </button>
+
+                <div id="clear-history-popover" class="clear-popover">
+                    <div class="clear-title">Delete all chats?</div>
+                    <div class="clear-sub">This action cannot be undone.</div>
+                    <div class="clear-actions">
+                        <button id="cancel-clear-history" class="clear-cancel">Cancel</button>
+                        <button id="confirm-clear-history" class="clear-confirm">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="header">
+                <div class="header-left"></div>
+            </div>
+            <div id="settings-panel" class="settings-panel">
+                <div class="settings-user">
+                    <img id="settings-avatar" src="" />
+                    <div id="settings-email" class="settings-email"></div>
+                </div>
+
+                <button id="logout-btn" class="settings-logout">Logout</button>
+            </div>
+            <div id="chat-box"></div>
+            <button id="scroll-bottom-btn">↓</button>
+            <div id="empty-state">
+                <div class="empty-brand">
+                    <img src="/static/qyvera-logo.svg" class="empty-brand-logo" alt="Qyvera logo" />
+                    <span class="empty-brand-text">Qyvera AI</span>
+                </div>
+                <h2>How can I help you?</h2>
+            </div>
+            <div class="input-area">
+                <div id="pending-files" class="pending-files" aria-live="polite"></div>
+                <div class="input-main-row">
+                    <button id="upload-btn" class="upload-btn"></button>
+                    <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.txt,application/pdf,image/png,image/jpeg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" multiple hidden>
+
+                    <textarea id="user-input" placeholder="Ask anything..." rows="1"></textarea>
+
+                    <button onclick="sendMessage()" class="send-btn"></button>
+                    <button id="mic-btn" class="mic-btn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="file-preview-modal" class="file-preview-modal" aria-hidden="true">
+        <div class="file-preview-shell" role="dialog" aria-modal="true" aria-label="File preview">
+            <div class="file-preview-head">
+                <div id="file-preview-title" class="file-preview-title">Preview</div>
+                <button id="file-preview-close" class="file-preview-close" type="button" aria-label="Close preview">✕</button>
+            </div>
+            <div id="file-preview-body" class="file-preview-body"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/static/js/core.js?v=20260314-introfix1"></script>
+    <script src="/static/js/auth.js?v=20260314-introfix1"></script>
+    <script src="/static/js/sessions.js?v=20260314-introfix1"></script>
+    <script src="/static/js/streaming.js?v=20260314-introfix1"></script>
+    <script src="/static/js/ui.js?v=20260314-introfix1"></script>
+    <script src="/static/js/attachments.js?v=20260314-introfix1"></script>
+    <script src="/static/js/main.js?v=20260314-introfix1"></script>
+</body>
+</html>
